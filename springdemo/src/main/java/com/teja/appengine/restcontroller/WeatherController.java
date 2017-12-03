@@ -50,10 +50,10 @@ public class WeatherController {
 		String date= paramObj.get("date").getAsString();
 		String city= paramObj.get("geo-city").getAsString();
 		
-		
+		String result = "Current temparature in "+ city + " on "+date +" is " +new Random().nextInt(50);
 		DialogResponse resp = new DialogResponse();
-		resp.setDisplayText("Current temparature in "+ city + " on "+date +" is " +new Random().nextInt(50) );
-		resp.setSpeech("Sample response from spring demo");
+		resp.setDisplayText(result);
+		resp.setSpeech(result);
 		return resp;
 	}
 }
