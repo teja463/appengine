@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		">
 	<mvc:annotation-driven enable-matrix-variables="true"/>
-	<context:component-scan base-package="com.teja.appengine.controller" />
+	<context:component-scan base-package="com.teja.appengine.controller, com.teja.appengine.restcontroller" />
 	
 	<!--  You dont need to configure the hanlder mapping becuase spring proides a default hanlder mapping.
 		  You can get the default value from DispatcherServlet.properties file in Spring Web MVC jar file.
@@ -21,5 +21,19 @@
 		<property name="prefix" value="/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	
+	<!-- Configure to plugin JSON as request and response in method handler -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Configure bean to convert JSON to POJO and vice versa -->
+	<bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+	
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
 	
 </beans>
