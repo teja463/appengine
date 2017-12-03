@@ -1,18 +1,18 @@
 package com.teja.appengine.restcontroller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.teja.appengine.beans.DialogResponse;
 import com.teja.appengine.beans.Weather;
 
@@ -42,8 +42,17 @@ public class WeatherController {
 	public DialogResponse post(HttpEntity<byte []> httpEntity){
 		byte[] body = httpEntity.getBody();
 		String strBody = new String(body);
+		System.out.println("reqBody: "+strBody);
+		Gson gson = new Gson();
+		JsonObject jsonReq = gson.fromJson(strBody, JsonObject.class);
+		JsonObject paramObj = jsonReq.getAsJsonObject("result").getAsJsonObject("parameters");
+		
+		String date= paramObj.get("date").getAsString();
+		String city= paramObj.get("geo-city").getAsString();
+		
+		
 		DialogResponse resp = new DialogResponse();
-		resp.setDisplayText(strBody);
+		resp.setDisplayText("Current temparature in "+ city + " on "+date +" is " +new Random().nextInt(50) );
 		resp.setSpeech("Sample response from spring demo");
 		return resp;
 	}
